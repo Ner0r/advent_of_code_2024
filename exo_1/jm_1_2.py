@@ -1,222 +1,24 @@
 import os
-import copy
-import sys
-
-
-# Afficher la limite d'occurence du système
-print(sys.getrecursionlimit())
-
-# Changer le nombre d'occurence max à 10k
-sys.setrecursionlimit(10000)
 
 # Permet de récupérer le chemin d'accès du script
 main_path = os.path.dirname(__file__)
 # On crée le chemin d'accès vers notre fichier 
 input = os.path.join(main_path, "input_jm.txt")
 
-def path (data, electric_data, position, direction , list_of_position) :
-    # for element in electric_data :
-    #     print(element)
-    # print(direction)
-    # print(position)
-    # print()
-    try :
-        x = position[0]
-        y = position[1]
-        if not (x < 0 or y < 0) :
-            list_of_position.append((x,y,direction))
-            # Si le caractère est un point :
-            if data[y][x] == "." :
-                electric_data[y][x] = "#"
-                if direction == "G" :
-                    x += 1
-                elif direction == "D" :
-                    x -= 1
-                elif direction == "H" :
-                    y += 1
-                elif direction == "B" :
-                    y -= 1
-                if not (x,y,direction) in list_of_position :
-                    path(data, electric_data,(x,y), direction , list_of_position)
-            
-            # Si le caractère est un - :
-            elif data[y][x] == "-" :
-                electric_data[y][x] = "#"
-                if direction == "G" :
-                    x += 1
-                    if not (x,y,direction) in list_of_position :
-                        path(data, electric_data,(x,y), direction, list_of_position)
-                elif direction == "D" :
-                    x -= 1
-                    if not (x,y,direction) in list_of_position :
-                        path(data, electric_data,(x,y), direction, list_of_position)
-                elif direction == "H" or direction == "B" :
-                    x_1 = x + 1
-                    x_2 = x - 1
-                    if not (x_1,y,"G") in list_of_position :
-                        path(data, electric_data,(x_1,y), "G", list_of_position)
-                    if not (x_2,y,"D") in list_of_position :
-                        path(data, electric_data,(x_2,y), "D", list_of_position)
-
-            
-            # Si le caractère est un | :
-
-            elif data[y][x] == "|" :
-
-                electric_data[y][x] = "#"
-                if direction == "G" or direction == "D":
-                    y_1 = y + 1
-                    y_2 = y - 1
-                    if not (x,y_1,"H") in list_of_position :
-                        path(data, electric_data,(x,y_1), "H", list_of_position)
-                    if not (x,y_2,"B") in list_of_position :
-                        path(data, electric_data,(x,y_2), "B", list_of_position)
-
-                elif direction == "H" :
-                    y += 1
-                    if not (x,y,direction) in list_of_position :
-                        path(data, electric_data,(x,y), direction, list_of_position)
-                elif direction == "B" :
-                    y -= 1
-                    if not (x,y,direction) in list_of_position :
-                        path(data, electric_data,(x,y), direction, list_of_position)
-            
-            # Si le caractère est un / :
-
-            elif data[y][x] == "/" :
-                electric_data[y][x] = "#"
-                if direction == "G" :
-                    y -= 1
-                    if not (x,y,"B") in list_of_position :
-                        path(data, electric_data,(x,y), "B", list_of_position)
-
-                elif direction == "D" :
-                    y += 1
-                    if not (x,y,"H") in list_of_position :
-                        path(data, electric_data,(x,y), "H", list_of_position)
-
-                elif direction == "H" :
-                    x -= 1
-                    if not (x,y,"D") in list_of_position :
-                        path(data, electric_data,(x,y), "D", list_of_position)
-
-                elif direction == "B" :
-                    x += 1
-                    if not (x,y,"G") in list_of_position :
-                        path(data, electric_data,(x,y), "G", list_of_position)
-            
-            # Si le caractère est un \ :
-
-            elif data[y][x] == "\\" :
-            
-                electric_data[y][x] = "#"
-
-                if direction == "G" :
-                    y += 1
-                    if not (x,y,"H") in list_of_position :
-                        path(data, electric_data,(x,y), "H", list_of_position)
-                elif direction == "D" :
-                    y -= 1
-                    if not (x,y,"B") in list_of_position :
-                        path(data, electric_data,(x,y), "B", list_of_position)
-                elif direction == "H" :
-                    x += 1
-                    if not (x,y,"G") in list_of_position :
-                        path(data, electric_data,(x,y), "G", list_of_position)
-                elif direction == "B" :
-                    x -= 1
-                    if not (x,y,"D") in list_of_position :
-                        path(data, electric_data,(x,y), "D", list_of_position)
-    
-    # On peut préciser l'erreur qu'on except (si on veut un type d'erreur spécifique). OverflowError, IndexError > index out of range
-    except IndexError:
-        return None
-
-data = []
+list_one = []
+list_two = []
+score = 0
 
 with open(input, 'r') as f:
     for line in f : 
-        data.append(list(line.rstrip("\n")))
-
-list_of_position = []
-electric_path = copy.deepcopy(data)
-list_of_result = []
-result = 0
-
-# Haut
-#start = (3,0)
-#path(data,electric_path, start, "H", list_of_position)
-
-# Bas
-#start = (3,4)
-#path(data,electric_path, start, "B", list_of_position)
-
-# Gauche => droite
-#start = (0,2)
-#path(data,electric_path, start, "G", list_of_position)
-
-# Droite
-#start = (9,2)
-#path(data,electric_path, start, "D", list_of_position)
-
-#position, direction , list_of_position)
+        d = line.split()
+        list_one.append(int(d[0]))
+        list_two.append(int(d[1]))
+list_one.sort()
+list_two.sort()
 
 
-for i in range (len(data)) :
-    print(i)
-    # On test pour toute la rangée du haut et du bas (0,0) -> (0,9) puis (1,0) -> (1,9) etc...
-    
-    # Rangée du haut
-    start = (i,0)
-    path(data,electric_path, start, "H", list_of_position)
-    for element in electric_path :
-        for item in element :
-            if item == "#" :
-                result += 1
-    list_of_result.append(result)
+for i in range (len(list_one)) :
+    score = score + (list_one[i] * list_two.count(list_one[i]))
 
-    # Reboot des variables utiles
-    list_of_position.clear()
-    electric_path = copy.deepcopy(data)
-    result = 0
-
-    # Rangée du bas
-    start = (i,len(data))
-    path(data,electric_path, start, "B", list_of_position)
-    for element in electric_path :
-        for item in element :
-            if item == "#" :
-                result += 1
-    list_of_result.append(result)
-
-     # Reboot des variables utiles
-    list_of_position.clear()
-    electric_path = copy.deepcopy(data)
-    result = 0
-
-    # Colonne à gauche :
-    start = (0,i)
-    path(data,electric_path, start, "G", list_of_position)
-    for element in electric_path :
-        for item in element :
-            if item == "#" :
-                result += 1
-    list_of_result.append(result)
-
-    # Reboot des variables utiles
-    list_of_position.clear()
-    electric_path = copy.deepcopy(data)
-    result = 0
-
-
-    # Colonne à droite :
-    start = (len(data),i)
-    path(data,electric_path, start, "D", list_of_position)
-    for element in electric_path :
-        for item in element :
-            if item == "#" :
-                result += 1
-    list_of_result.append(result)
-
-
-print(max(list_of_result))
+print(score)
